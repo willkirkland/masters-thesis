@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file is the updated XML schema for X2N
+	 If you modify this file, please use xxd to update the corresponding 
+	 C header file, i.e.,
+	   $ xxd -i x2nSchema_new.xsd >x2xSchema_new.h
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element nillable="true" name="file">
+    <xsd:complexType>
+      <xsd:sequence minOccurs="1">
+        <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="units" form="unqualified">
+          <xsd:complexType>
+            <xsd:attribute name="burnup" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="concentration" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="crosssection" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="density" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="energy" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="macrocrosssection" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="temperature" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="time" form="unqualified" type="xsd:string"/>
+            <xsd:attribute name="velocity" form="unqualified" type="xsd:string"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="unbounded" name="data_set_def">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="name" type="xsd:string" form="unqualified"/>
+                <xsd:attribute name="code" type="xsd:string" form="unqualified"/>
+                <xsd:attribute name="colors_cold" type="xsd:string" form="unqualified"/>
+                <xsd:attribute name="colors_hot" type="xsd:string" form="unqualified"/>
+                <xsd:attribute name="note" type="xsd:string" form="unqualified"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="1" name="dim_data">
+          <xsd:complexType>
+            <xsd:simpleContent>
+              <xsd:extension base="xsd:string">
+                <xsd:attribute name="nbumax" type="xsd:integer" form="unqualified"/>
+                <xsd:attribute name="ng" type="xsd:integer" form="unqualified"/>
+                <xsd:attribute name="nside" type="xsd:integer" form="unqualified"/>
+              </xsd:extension>
+            </xsd:simpleContent>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="energygroup" form="unqualified">
+          <xsd:complexType>
+            <xsd:sequence minOccurs="1">
+              <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="upbound" form="unqualified">
+                <xsd:complexType>
+                  <xsd:attribute name="energy" form="unqualified" type="xsd:double"/>
+                  <xsd:attribute name="gid" form="unqualified" type="xsd:integer"/>
+                  <xsd:attribute name="upscatter" form="unqualified" type="yes_no"/>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="material" form="unqualified">
+          <xsd:complexType>
+            <xsd:sequence minOccurs="1">
+              <xsd:element minOccurs="1" maxOccurs="unbounded" name="data_set" form="unqualified">
+                <xsd:complexType>  
+                  <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                    <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="time" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1">
+                          <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="timestamp" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:attribute name="burnup" form="unqualified" type="xsd:double"/>
+                              <xsd:attribute name="tid" form="unqualified" type="xsd:integer"/>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="neutronprecursor" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1">
+                          <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="precursor" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:attribute name="decayconstant" form="unqualified" type="xsd:double"/>
+                              <xsd:attribute name="pid" form="unqualified" type="xsd:integer"/>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="dheatprecursor" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1">
+                          <xsd:element minOccurs="1" nillable="true" name="precursor" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:attribute name="decayconstant" form="unqualified" type="xsd:double"/>
+                              <xsd:attribute name="pid" form="unqualified" type="xsd:integer"/>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="fisssion" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1">
+                          <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="spectrum" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:simpleContent>
+                                <xsd:extension base="xsd:double">
+                                  <xsd:attribute name="gid" form="unqualified" type="xsd:integer"/>
+                                </xsd:extension>
+                              </xsd:simpleContent>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="typeof" form="unqualified" type="prompt_delayed"/>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="case" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1">
+                          <xsd:element minOccurs="1" nillable="true" name="fuelcondition" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:sequence minOccurs="1">
+                                <xsd:element minOccurs="1" nillable="true" name="history" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:all minOccurs="1">
+                                      <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="temperature" form="unqualified"/>
+                                      <xsd:element minOccurs="1" nillable="true" name="controlrod" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:attribute name="state" form="unqualified" type="cr_state"/>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:all>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element minOccurs="1" nillable="true" name="coolantcondition" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:sequence minOccurs="1">
+                                <xsd:element minOccurs="1" nillable="true" name="history" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:all minOccurs="1">
+                                      <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="temperature" form="unqualified"/>
+                                      <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="density" form="unqualified"/>
+                                      <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="concentration" form="unqualified"/>
+                                    </xsd:all>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="caseid" form="unqualified" type="xsd:integer"/>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="branch" form="unqualified">
+                      <xsd:complexType>
+                        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+                          <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="fisssion" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                                <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="fyield" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:sequence minOccurs="1">
+                                      <xsd:element minOccurs="1" nillable="true" name="isotope" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:sequence minOccurs="1">
+                                            <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="fp" form="unqualified">
+                                              <xsd:complexType>
+                                                <xsd:simpleContent>
+                                                  <xsd:extension base="xsd:double">
+                                                    <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                                  </xsd:extension>
+                                                </xsd:simpleContent>
+                                              </xsd:complexType>
+                                            </xsd:element>
+                                          </xsd:sequence>
+                                          <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="nyield" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:sequence minOccurs="1">
+                                      <xsd:element minOccurs="1" nillable="true" name="isotope" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:sequence minOccurs="1">
+                                            <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="delayedneutron" form="unqualified">
+                                              <xsd:complexType>
+                                                <xsd:simpleContent>
+                                                  <xsd:extension base="xsd:double">
+                                                    <xsd:attribute name="pid" form="unqualified" type="xsd:integer"/>
+                                                  </xsd:extension>
+                                                </xsd:simpleContent>
+                                              </xsd:complexType>
+                                            </xsd:element>
+                                          </xsd:sequence>
+                                          <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" maxOccurs="1" nillable="true" name="dyield" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:sequence minOccurs="1">
+                                      <xsd:element minOccurs="1" nillable="true" name="isotope" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:sequence minOccurs="1">
+                                            <xsd:element minOccurs="1" nillable="true" name="decayheat" form="unqualified">
+                                              <xsd:complexType>
+                                                <xsd:simpleContent>
+                                                  <xsd:extension base="xsd:double">
+                                                    <xsd:attribute name="pid" form="unqualified" type="xsd:integer"/>
+                                                  </xsd:extension>
+                                                </xsd:simpleContent>
+                                              </xsd:complexType>
+                                            </xsd:element>
+                                          </xsd:sequence>
+                                          <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="spectrum" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:simpleContent>
+                                      <xsd:extension base="xsd:double">
+                                        <xsd:attribute name="gid" form="unqualified" type="xsd:integer"/>
+                                      </xsd:extension>
+                                    </xsd:simpleContent>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="kinf" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:simpleContent>
+                                      <xsd:extension base="xsd:double">
+                                      </xsd:extension>
+                                    </xsd:simpleContent>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:choice>
+                              <xsd:attribute name="tid" form="unqualified" type="xsd:integer"/>
+                              <xsd:attribute name="typeof" form="unqualified" type="xsd:string"/>
+                            </xsd:complexType>
+                          </xsd:element>
+                          <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="grouphistory" form="unqualified">
+                            <xsd:complexType>
+                              <xsd:sequence minOccurs="1">
+                                <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="macrocrosssection" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:simpleContent>
+                                      <xsd:extension base="xsd:double">
+                                        <xsd:attribute name="typeof" form="unqualified" type="macro_xsec"/>
+                                        <xsd:attribute name="togid" form="unqualified" type="xsd:integer"/>
+                                      </xsd:extension>
+                                    </xsd:simpleContent>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" nillable="true" name="adfdata" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:sequence minOccurs="1">
+                                      <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="adf" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:simpleContent>
+                                            <xsd:extension base="xsd:double">
+                                              <xsd:attribute name="face" form="unqualified" type="direction"/>
+                                            </xsd:extension>
+                                          </xsd:simpleContent>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="typeof" form="unqualified" type="coordSys"/>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" nillable="true" name="neutron" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:attribute name="velocity" form="unqualified" type="xsd:double"/>
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="buckling" form="unqualified"/>
+                                <xsd:element minOccurs="1" nillable="true" type="xsd:double" name="neutronsper" form="unqualified"/>
+                                <xsd:element minOccurs="1" nillable="true" name="isotope" form="unqualified">
+                                  <xsd:complexType>
+                                    <xsd:sequence minOccurs="1">
+                                      <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="microcrosssection" form="unqualified">
+                                        <xsd:complexType>
+                                          <xsd:simpleContent>
+                                            <xsd:extension base="xsd:double">
+                                              <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                            </xsd:extension>
+                                          </xsd:simpleContent>
+                                        </xsd:complexType>
+                                      </xsd:element>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="zamid" form="unqualified" type="zamid"/>
+                                  </xsd:complexType>
+                                </xsd:element>
+                              </xsd:sequence>
+                              <xsd:attribute name="gid" form="unqualified" type="xsd:integer"/>
+                              <xsd:attribute name="tid" form="unqualified" type="xsd:integer"/>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                        <xsd:attribute name="caseid" form="unqualified" type="xsd:integer"/>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:choice>
+                <xsd:attribute name="id" type="xsd:integer" form="unqualified"/>
+                <xsd:attribute name="name" type="xsd:string" form="unqualified"/>
+                <xsd:attribute name="note" type="xsd:string" form="unqualified"/>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+            <xsd:attribute name="isFuel" form="unqualified" type="yes_no"/> 
+            <xsd:attribute name="matid" form="unqualified" type="xsd:integer"/>
+            <xsd:attribute name="note" type="xsd:string" form="unqualified"/>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+      <xsd:attribute name="code" form="unqualified" type="xsd:string"/>
+      <xsd:attribute name="created" form="unqualified" type="xsd:string"/>
+      <xsd:attribute name="filename" form="unqualified" type="xsd:string"/>
+      <xsd:attribute name="filetype" form="unqualified" type="xsd:string"/>
+      <xsd:attribute name="fileversion" form="unqualified" type="xsd:double"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:simpleType name="yes_no">
+    <xsd:restriction base="xsd:string">
+    	<xsd:enumeration value="yes"/>
+    	<xsd:enumeration value="no"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="prompt_delayed">
+    <xsd:restriction base="xsd:string">
+    	<xsd:enumeration value="prompt"/>
+    	<xsd:enumeration value="delayed"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="cr_state">
+    <xsd:restriction base="xsd:integer">
+    	<xsd:pattern value="[0-9]"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="macro_xsec">
+    <xsd:restriction base="xsd:string">
+			<xsd:enumeration value="transport"/>
+			<xsd:enumeration value="absorption"/>
+			<xsd:enumeration value="nufission"/>
+			<xsd:enumeration value="kappapower"/>
+                        <xsd:enumeration value="xe"/>
+                        <xsd:enumeration value="sm"/>
+			<xsd:enumeration value="scatter"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="direction">
+    <xsd:restriction base="xsd:string">
+			<xsd:enumeration value="north"/>
+			<xsd:enumeration value="south"/>
+			<xsd:enumeration value="east"/>
+			<xsd:enumeration value="west"/>
+			<xsd:enumeration value="northeast"/>
+			<xsd:enumeration value="northwest"/>
+			<xsd:enumeration value="southeast"/>
+			<xsd:enumeration value="southwest"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="coordSys">
+    <xsd:restriction base="xsd:string">
+    	<xsd:enumeration value="cartesian"/>
+    	<xsd:enumeration value="hexagonal"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="zamid">
+    <xsd:restriction base="xsd:string">
+    	<xsd:pattern value="([0-9]{6})|(all)"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
