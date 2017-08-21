@@ -1,0 +1,212 @@
+simple_nestle
+read parameter
+' Name of the cross section file
+  xsecfile=NESTLE.2G.MACRO
+  outputfile=simple_2.out
+' Type of geometry
+  geometry=cart
+' Type of Symmetry
+  sym=full
+' Use thermal-hydraulic feedback
+  thfeedback=yes
+' Use the Chebychev acceleration technique
+  accel=cheby
+  chebymax=5
+' Core power density at rated full power (kW/Liter).
+  powerden=150.0
+'Plots Directory
+  plot_dir=plots_3D/
+  output_format=new
+  inputedit=no
+end parameter
+
+read heattransfer
+' Polynomial coefficients for coolant liquid density (lbm/ft3) versus internal energy (BTU/lbm).
+  rho_vs_ufit 96.45734 -0.1949999 3.0895701E-04 -2.1894648E-07 end rho_vs_ufit
+' Polynomial coefficients for coolant liquid temperature (degF) versus internal energy (BTU/lbm).
+  t_vs_ufit 341.7741 -0.7333801 3.3770057E-03 -2.4074573E-06 end t_vs_ufit
+' Polynomial coefficients for coolant internal energy (BTU/lbm) versus temperature (degF).
+  u_vs_Tfit -4712.978 25.73904 -4.3827321E-02 2.6161042E-05 end u_vs_Tfit
+' Coolant mass velocity (lb/hr-ft2)
+  g=2000000.0
+' Saturated vapor density (lbm/ft3).
+  rhovsat=6.3727
+' Coolant inlet temperature (degF)
+'  tinlet=578.0
+  tinlet=950.0
+' Coolant saturation temperature (degF)
+  tsat=654.5
+' Saturated vapor internal energy (BTU/lbm)
+  uvsat=1052.403
+end heattransfer 
+
+read fuelmech
+' Core statistical weighting factor, that compensates for the lack of detail in
+' the spatial description of the core.
+  wc=1.0 
+' Pellet weighting factor accounts for resonance flux depression in the interior
+' of the pellet.
+  wp=0.85
+' Fraction of fission energy deposited directly within fuel.
+  fiss_frac=0.975
+' Fuel density (lbm/ft3).
+  fuelden=655.5
+' Polynomial coefficients for effective heat transfer coefficient (kw/ft2-degF)
+' versus fuel temperature (degF).
+  heff_vs_t 0.78363116E-01 -0.19203380E-04 0.73696720E-08 end heff_vs_t
+' Polynomial coefficients for average fuel temperature (degF) versus linear power density (kw/ft).
+  tavg_vs_lpd 0.56955571E+3 0.16964059E+03 -0.2916911E+1 end tavg_vs_lpd
+' Polynomial coefficients for surface fuel temperature (degF) versus linear power density (kw/ft).
+  tsurf_vs_lpd 0.56955571E+3 0.924990E+2 0.432861000 -0.377884E-1 end tsurf_vs_lpd
+' Polynomial coefficients for fuel specific heat (BTU/lbm-degF) versus temperature (degF).
+  cp_vs_tfit 0.8110000193E-01 end cp_vs_tfit
+' Number of fuel rods per bundle or assembly
+  numfrods 312 end numfrods
+' Bundle area in ft**2
+  bunarea 0.4975 end bunarea
+' Fuel rod radius (inches)
+  frodrad 0.149 end frodrad
+' Volume fraction occupied by the fuel
+  fuelfrac 0.28 end fuelfrac
+' Wet volume fraction for the node when rodd is in
+  wtfri 0.46 end wtfri
+' Wet volume fraction for the node when rodd is out
+  wtfro 0.44 end wtfro
+' Identification numbers of the lattices to use
+  lattice_ids 1 end lattice_ids
+end fuelmech 
+
+read burndata
+' System Pressure (psia)
+  pres=2250
+' Burnup units: MWD/MTU
+' crod_id: Id of the control rod positions (crbank)
+' ppm: Concentration of soluble poison in parts per million.
+'  burnup=    0.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'
+'
+''   The test cases below are to compare a fixed arbitrary point without T-H Feedback
+'  burnup=    1.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'  burnup=  100.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'  burnup=  500.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'  burnup= 1000.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'  burnup= 2000.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'  burnup= 5000.0 sm=no xe=no crod_id=1 tinlet=450.0  ppm=200.0 end
+'
+''   The test cases below were to compare with T-H feedback on and arbitrary temperatures and burnups, poisoned so k_eff ~ 1.0
+'  burnup=    1.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=296.0 end
+'  burnup=   23.0  sm=no xe=no crod_id=1 tinlet=587.0  ppm=291.0 end
+'  burnup=   81.0  sm=no xe=no crod_id=1 tinlet=635.0  ppm=246.0 end
+'  burnup=  154.0  sm=no xe=no crod_id=1 tinlet=409.0  ppm=264.5 end
+'  burnup=  288.0  sm=no xe=no crod_id=1 tinlet=472.0  ppm=288.0 end
+'  burnup=  318.0  sm=no xe=no crod_id=1 tinlet=651.0  ppm=170.0 end
+'  burnup=  709.0  sm=no xe=no crod_id=1 tinlet=470.0  ppm=305.0 end
+'  burnup= 1052.0  sm=no xe=no crod_id=1 tinlet=564.0  ppm=313.0 end
+'  burnup= 1611.0  sm=no xe=no crod_id=1 tinlet=530.0  ppm=321.0 end
+'  burnup= 2283.0  sm=no xe=no crod_id=1 tinlet=483.0  ppm=317.0 end
+'
+''   The test cases below are to compare with T-H feedback at a fixed arbitrary temperature, poisoned so k_eff ~ 1.0 using multiquadrics
+'  burnup=    1.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=299.73 end
+'  burnup=   23.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=295.77 end
+'  burnup=   81.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=286.88 end
+'  burnup=  154.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=282.27 end
+'  burnup=  288.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=285.97 end
+'  burnup=  318.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=287.11 end
+'  burnup=  709.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=302.40 end
+'  burnup= 1052.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=313.40 end
+'  burnup= 1611.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=316.45 end
+'  burnup= 2283.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=312.55 end
+'  burnup= 5116.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=252.83 end
+'
+'   The test cases below are to compare with T-H feedback at a fixed arbitrary temperature, poisoned so k_eff ~ 1.0 using regressions
+  burnup=    1.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1386.0 end
+  burnup=   23.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1132.0 end
+  burnup=   81.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=675.50 end
+  burnup=  154.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=465.00 end
+  burnup=  288.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=657.00 end
+  burnup=  318.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=695.00 end
+  burnup=  709.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1376.0 end
+  burnup= 1052.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1772.0 end
+  burnup= 1611.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1772.5 end
+  burnup= 2283.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=1284.0 end
+  burnup= 5116.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=0.0000 end
+'
+'  burnup=  115.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=270.0 end
+'  burnup=  567.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=275.0 end
+'  burnup= 1120.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=300.0 end
+'  burnup= 2480.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=300.0 end
+'  burnup= 5000.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=240.0 end
+'  burnup=10000.0  sm=no xe=no crod_id=1 tinlet=450.0  ppm=525.0 end
+'  burnup=20000.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'  burnup=20000.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'  burnup=25000.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'  burnup=525.0.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'  burnup=35000.0  sm=no xe=no crod_id=1 tinlet=578.0  ppm=525.0 end
+'  burnup=40000.0  sm=eq xe=eq crod_id=1 tinlet=578.0  ppm=525.0 end
+end burndata
+
+
+read edit
+     power dim=2 dist=max plot=yes end plot
+     flux dim=2 dist=avg plot=yes step=1 end plot
+end edit
+
+read geom
+' Boundary condition of the inside
+  inner=cyclic
+' Boundary condition of the outside
+  outer=refl
+' Boundary condition of the top
+  up=refl
+' Boundary condition of the bottom
+  down=refl
+' The bundle or assembly pitch along the x axis (inches)
+  bpitchx=8.4646
+' The bundle or assembly pitch along the y axis (inches)
+  bpitchy=8.4646
+' The planar node divisions along the x-axis (inches)
+  deltax 4r4.2323 end deltax
+' The planar node divisions along the y-axis (inches)
+  deltay 4r4.2323 end deltay
+' The axial node divisions along the z-axis (inches)
+  deltaz 10r5.0 end deltaz
+' The basic figure for each axial slice
+  figure 10r1 end figure
+' The lowermost node with fuel
+  bottomfuelnode=1
+' The uppermost node with fuel
+  topfuelnode=10
+' Direction control rods are inserted
+  crload=topdown
+' Position of control rod banks
+' First number is position id
+' Second number is control-rod array-id
+' Nth number is the axial position of the bank (inches). Zero is fully inserted.
+  crbank 1 66 50.0 50.0 50.0 50.0 end crbank
+' Array id for the rotation applied to ADFs in the xy-plane
+  rotation=99
+end geom
+
+read arrays
+' Basic Figure 1
+ ara=1 nux=4 nuy=4 fill
+    1 1 1 1
+    1 1 1 1
+    1 1 1 1
+    1 1 1 1
+ end fill
+' Control Rod Array
+ ara=66 nux=4 nuy=4 fill
+    1 1 2 2
+    1 1 2 2
+    3 3 4 4
+    3 3 4 4
+ end fill
+' ADF Rotation Array
+ ara=99 nux=4 nuy=4 fill
+    3 0 3 0
+    2 1 2 1
+    3 0 3 0
+    2 1 2 1
+ end fill
+end arrays

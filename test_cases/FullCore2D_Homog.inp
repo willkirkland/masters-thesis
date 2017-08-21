@@ -1,0 +1,456 @@
+Sample FHR 3D Core
+read parameter
+'*********************************************************************************
+'Author: Cole Gentry
+'Date: 08/21/2014
+'
+'References:
+'[1] D.E. Holcomb, D. Ilas, V.K. Varma, A.T. Cisneros, R.P. Kelly, J.C. Gehin, 
+'    Core and Refueling Design Studies for the Advanced High Temperature Reactor, 
+'    Oak Ridge National Laboratory, ORNL/TM-2011/365, September 2011
+'
+'[2] S.M. Bowman, T.Suto, SCALE-4 Analysis of Pressurized Water Reactor Critical 
+'    Configurations: Volume 5 & North Anna Unit 1 Cycle 5,
+'    Oak Ridge National Laboratory, ORNL/TM-12294/V5, October 1994
+'
+'[3] S. Cantor, J.W. Cooke, A.S. Dworkin, G.D. Robbins, R.E. Thoma, G.M. Watson,
+'    Phyiscal Properties of Molten-Salt Reactor Fuel, Coolant, and Flush Salts,
+'    Oak Ridge National Laboratory, ORNL/TM-2316, 1988
+'
+'[4] C.B. Davis, Implementation of Molten Salt Properties into RELAP-3D/ATHENA, 
+'    Idaho National Engineering and Environmental Laboratory,
+'    INEEL/EXT-05-02658, 2005 
+'
+'[5] M.S. Sohal, M.A. Ebner, P. Sabharwall, P. Sharpe, Engineering Database
+'    of Liquid Salt Thermophysical and Thermochemical Properties, Idaho National
+'    Laboratory, INL/EXT-10-18297, 2010
+'
+'[6] http://www4.ncsu.edu/~doster/NE400/Text/HeatGeneration/HeatGeneration.PDF
+'
+'[7] P. Avigni, Thermal Hydraulic Modeling of the Advanced High Temperature Reactor for
+'    the Evaluation of Steady State and Transient Conditions, GA Tech Master's Thesis,
+'    2012
+'
+'*********************************************************************************
+
+'*********************************************************************************
+'Parameter Block
+
+'Model Specifications
+'---------------------------------------------------------------------------------
+'Diffusion Solution Method (fdm/nem)
+diffusionmethod=nem
+ 
+'Thermal Hydraulic Feedback On (yes/no)
+thfeedback=no               
+ 
+'Thermal Hydraulic Model (onephase/twophase)  NOTE: No Boiling so Single Phase
+thsolver=hem             
+
+'Depletion Case (yes/no)
+deplete=yes                   
+
+'Microscopic Depletion case (yes/no)
+microdeplete=no               
+
+'Core Symmetry (full/quar)
+sym=full                      
+
+'Fuel Assembly Geometry Type (cart/hexa)
+geometry=hexa                
+
+'Core Power Density at Rated Full Power (kW/L)          Ref [1,pg 15]
+powerden=12.9                 
+
+'Ratio of heavy metal density to fuel material density  Ref [1,pg 20,21] [2,pg 19]
+ratiohmfuel=0.893778          
+
+'a/o of absorbing isotope of soluble poison  (DUMMY VALUE)
+solu_abund=0.197714997        
+
+'Atomic weight of Soluable Poison  (DUMMY VALUE)
+solu_atmwgt=0.00001           
+
+'Solver Specifications
+'---------------------------------------------------------------------------------
+'Maximum number of thermal scattering iterations
+therms=1                      
+
+'Maximum number of outer iterations
+outers=120
+
+'Stopping criteria required to be satisfied after a coefficient matrix update (yes/no)
+demand_conv=yes               
+
+'Number of thermal hydraulic iterations per nem diffusion iterations
+thupdate=5                    
+
+'Outer iteration L2 relative error reduction criteria used for determining when NEM coupling coefficients. updates are to be completed
+epsnem=1e-4                   
+
+'Number of depletion updates 
+depl_update=3                 
+
+'Reduction of L2 relative residual error for the diffusion equation from starting new Chebyshev order
+eps_pres=5E-5                 
+
+'Steady-state spectral shift correction on (yes/no)
+specshiftcorr=no              
+
+'Convergence criteria for the inner iterations
+epsinner=1e-5                 
+
+'Convergence criteria for the outer iterations
+epsouter=1e-5                 
+
+'Force Positive Flux
+positiveflux=yes
+
+'Use SOR
+usesor=yes
+
+'Input / Output Format Specifications
+'---------------------------------------------------------------------------------
+'File Name of Xsec File
+xsecfile=NESTLE.XSEC.MACRO.FHR.13G
+
+'Xsec File Created Using T2N (yes/no)
+t2n=yes                       
+
+'Print runtime info to screen (yes/no)
+printscreen=yes               
+
+'Output Format (yes/no)
+output_format=new            
+
+'Plots Directory
+plot_dir=plots_3D/   
+
+'Acceleration Method (cheby/weil)
+accel=cheby
+
+'Upper limit on Chebyshev order
+chebymax=1
+
+end parameter 
+'*********************************************************************************
+
+
+'*********************************************************************************
+'Output Edits Block
+read edit
+
+'Print to the output file
+flux   
+kinf   
+power  
+sm149  
+xe135  
+burnup 
+
+'Print Plots
+flux   visit=yes gap=0.0 0.0 end visit  
+kinf   visit=yes gap=0.0 0.0 end visit
+power  visit=yes gap=0.0 0.0 end visit
+sm149  visit=yes gap=0.0 0.0 end visit
+xe135  visit=yes gap=0.0 0.0 end visit
+burnup visit=yes gap=0.0 0.0 end visit
+
+end edit
+'*********************************************************************************
+
+
+'*********************************************************************************
+'Heat Transfer Block
+read heattransfer
+
+'Coolant mass flow velocity (lbs/hr/ft^2)   Ref[1,pg 15,17,35]
+g=1957099.58
+
+'Coolant bypass flow rate i.e. flow not in bundles or water rods (Mlbs/hr)    ASSUMING NO BYPASS!!!
+bypass=0.0                              
+
+'Redistribute the flow in the channels according to the mode (yes/no)
+redistributeflow=mass
+
+'Coolant Saturation Temp (F)   Ref [3,pg 33]
+tsat=2608.92                            
+
+'Coolant Vapor Saturation Internal Energy (BTU/lbm)  Ref [4,pg 16]
+uvsat=2966.47                           
+
+'Coolant Saturated Vapor Density (lbm/ft3)  Ref [4,pg 15]
+rhovsat=0.0012486                        
+
+'Coolant inlet temperature (F) Ref [1,pg 15]
+tinlet=1202.0                           
+
+'Coolant inlet temperature (F) search min for criticality or power level search  (using tinlet - 0.1*tinlet)
+tinletmin=1085.00                       
+
+'Coolant inlet temperature (F) search min for criticality or power level search  (using tinlet + 0.1*tinlet)
+tinletmax=1319.00                       
+
+'Fitting coefficients for coolant liquid density (lbm/ft3) versus internal energy (BTU/lbm)  Ref [4,pg 13] [5,pg 6,7,8]  
+rho_vs_ufit                             
+ 150.63867  -0.029181                   
+end rho_vs_ufit    
+
+'SHOULD THIS BE SWAPPED WITH t_vs.ufit?
+'Fitting coefficients for coolant internal energy (BTU/lbm) versus temperature (F)  Ref [4,pg 13] [5,pg 6,7,8]
+u_vs_Tfit
+ 1.3450E+03  1.73
+end u_vs_Tfit
+
+'SHOULD THIS BE SWAPPED WITH u_vs.tfit?
+'Fitting coefficients for coolant liquid temperature (F) versus internal energy (BTU/lbm)  Ref [4,pg 13] [5,pg 6,7,8]
+t_vs_ufit
+ -776.23  0.58
+end t_vs_ufit
+
+end heattransfer
+'*********************************************************************************
+
+
+'*********************************************************************************
+'Fuel Mechanics Block
+read fuelmech
+
+'Fuel temperature weight factor compensates for the lack of detail in the spatial description of the core
+wc=1.0                                  
+
+'Fuel temperature weight factor accounts for resonance flux depression in the interior of the pellet
+wp=1.0                                  
+
+'Fraction of fission energy deposited directly within fuel  Ref [6,pg 42]
+fiss_frac=0.900                         
+
+'Fuel density (lbm/ft3) Ref [1,pg 20]
+fuelden=680.465                         
+
+'Fitting coefficients for average fuel temperature (F) versus linear power density (kw/ft) Ref [7,pg 54,67]
+tavg_vs_lpd                             
+ 1251.4  -0.0012  9E-9
+end tavg_vs_lpd
+
+'Fitting coefficients for effective heat transfer coefficient (kw/ft2-F) versus fuel temperature (F) Ref [7,pg 54,66]
+heff_vs_t                               
+ 3.3604  -0.0034  1E-6 
+end heff_vs_t         
+
+'Order of polynomial fitting surface fuel temperature (F) versus linear power density (kw/ft) Ref [7,pg 54,67]
+tsurf_vs_lpd                            
+ 1283.5  -0.0014  7E-9
+end tsurf_vs_lpd
+
+'Fitting coefficients for fuel specific heat (BTU/lbm-F) versus temperature (F) Ref [7,pg 13]
+cp_vs_tfit                              
+ 0.073 0.0003 -7E-8
+end cp_vs_tfit
+
+'Volume fraction of the node that is fuel (Calculated from Base Case)  for TRISO only 0.01282 for Fuel Plates 0.5460
+fuelfrac                                
+ 0.0  0.0  0.0 0.5460
+end fuelfrac
+
+'Bundle area (ft^2) Ref [1,pg 18]
+bunarea                                 
+ 3r2.037   
+end bunarea        
+
+
+'Equivalent flow diameter (in) used in the DFM UNNECESSARY!!!
+eqdiam                                  
+ 0.0 0.0 0.0 1.68
+end eqdiam         
+
+'Hydraulic Diameter (in) (Calculated from Base Case)
+hydiam                                  
+ 0.0 0.0 0.0 1.68  
+end hydiam         
+
+'Wet (coolant) volume fraction of the node with the control rods in (Calculated from Base Case)
+wtfri                                   
+ 1.0 1.0 1.0 0.227365342
+end wtfri               
+
+'Wet (coolant) volume fraction of the node with the control rods out  (Calculated from Base Case)
+wtfro                                   
+ 1.0 1.0 1.0 0.239770
+end wtfro               
+
+lattice_ids                            
+ 1 2 3 4
+end lattice_ids        
+
+'Number of Fuel elements (number of plates)
+numfrods
+ 0 0 0 18
+end numfrods
+
+'Equivalent Area radius (in)
+frodrad
+ 0.0 0.0 0.0 0.84
+end frodrad
+
+
+end fuelmech
+'*********************************************************************************
+
+
+'*********************************************************************************
+'Burn Data Block
+read burndata
+
+'Coolant pressure (psia) Ref [1,pg 17]
+pres=14.696   
+
+'State Points---------------------------------------------------------------------
+burnup=0.00000E+00 sm=no   xe=no   crod_id=1    pctpwr=100.0    pctflow=100.0   bypass=0.0    tinlet=1202   end
+
+end burndata
+'*********************************************************************************
+
+
+
+'*********************************************************************************
+'Geometry Block
+read geom
+
+'Number of radial rings of bundles (assemblies) surrounding center bundle
+numrings=11                   
+
+'Boundary conditions Radial interior (reflective, zero, non-reentrant, cyclic, not applicable)  WHY CYCLIC???
+inner=cyclic
+
+'Boundary conditions Radial exterior (reflective, zero, non-reentrant, cyclic, not applicable)
+outer=noentry
+
+'Boundary conditions z-up            (reflective, zero, non-reentrant, cyclic, not applicable)
+up=refl
+
+'Boundary conditions z-down          (reflective, zero, non-reentrant, cyclic, not applicable)
+down=refl
+
+'Orifice ID
+orifice_id=117                    
+
+'Bundle Pitch (in) Ref [1,pg 18]
+bpitch=18.4055                    
+
+'Sizes of nodes in Z direction
+deltaz                            
+ 1r10.0 
+end deltaz           
+
+'Starting and ending axial material mesh numbers for fuel
+bottomfuelnode=1 topfuelnode=1    
+
+'Array id numbers of the basic figures 
+figure                            
+ 1r1 
+end figure            
+
+'Direction that the control rods travel 
+crload=topdown                    
+
+'Control Rod Array
+crbank                       
+ 1  17 162
+end crbank
+
+end geom
+'*********************************************************************************
+
+
+
+'*********************************************************************************
+'Array Block
+read arrays
+
+' ACTIVE FUEL-----------------------------------------
+ara=1 nux=45 nuy=23 fill
+           0 0 1 1 1 1 1 1 1 1 0 0
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+         1 1 1 1 4 4 4 4 4 4 1 1 1 1
+        1 1 1 4 4 4 4 4 4 4 4 4 1 1 1
+       1 1 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+      1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+     1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+    1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+   1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+  1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+ 0 1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 0
+0 1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 0
+ 0 1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1 0
+  1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+   1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+    1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+     1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+      1 1 4 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+       1 1 4 4 4 4 4 4 4 4 4 4 4 4 1 1
+        1 1 1 4 4 4 4 4 4 4 4 4 1 1 1
+         1 1 1 1 4 4 4 4 4 4 1 1 1 1
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+           0 0 1 1 1 1 1 1 1 1 0 0
+end fill
+
+
+' CONTROL BLADE CONTROL----------------------------------------------------------
+ara=17 nux=45 nuy=23 fill
+           0 0 1 1 1 1 1 1 1 1 0 0
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+       1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+ 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+       1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+         1 1 1 1 1 1 1 1 1 1 1 1 1 1
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+           0 0 1 1 1 1 1 1 1 1 0 0
+end fill
+
+
+' Orifice Loss Coeff Array------------------------------------------------------
+ara=117 nux=45 nuy=23 fill
+           0 0 1 1 1 1 1 1 1 1 0 0
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+         1 1 1 1 1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+       1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+ 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+   1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+      1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+       1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+        1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+         1 1 1 1 1 1 1 1 1 1 1 1 1 1
+          0 1 1 1 1 1 1 1 1 1 1 1 0
+           0 0 1 1 1 1 1 1 1 1 0 0
+end fill
+
+
+end arrays
+'*********************************************************************************
